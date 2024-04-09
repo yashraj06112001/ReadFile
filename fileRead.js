@@ -4,10 +4,7 @@ const readline = require('readline');
 
 const filename = process.argv[2];
 
-if (!filename) {
-  console.error('Usage: node fileread.js <filename>');
-  process.exit(1);
-}
+
 
 const rl = readline.createInterface({
   input: process.stdin,
