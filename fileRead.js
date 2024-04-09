@@ -1,24 +1,24 @@
 const fs = require('fs');
 const zlib = require('zlib');
 const readline = require('readline');
-const gzFilePath = 'file.gz';
-const numLinesToRead = 1000;
-const readStream = fs.createReadStream(gzFilePath);
-const unzipStream = readStream.pipe(zlib.createGunzip());
+const filepath = 'file.gz';
+const totalLines = 1000;
+const readStream = fs.createReadStream(filepath);
+const unZip = readStream.pipe(zlib.createGunzip());
 const rl = readline.createInterface({
-  input: unzipStream,
+  input: unZip,
   crlfDelay: Infinity 
 });
 
-let linesRead = 0;
+let lines = 0;
 
 rl.on('line', (line) => {
   // Print the line
   console.log(line);
 
-  linesRead++;
+  lines++;
 
-  if (linesRead >= numLinesToRead) {
+  if (lines >= totalLines) {
     rl.close();
     readStream.close(); 
   }
