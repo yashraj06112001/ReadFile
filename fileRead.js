@@ -2,9 +2,9 @@ const fs = require('fs');
 const zlib = require('zlib');
 const readline = require('readline');
 
-const filename = process.argv[2];
-if (!fs.existsSync(filename)) {
-    console.error(` '${filename}' does not exist.`);
+const file = process.argv[2];
+if (!fs.existsSync(file)) {
+    console.error(` '${file}' does not exist.`);
     process.exit(1);
   }
 
@@ -13,16 +13,16 @@ const rl = readline.createInterface({
 
 });
 
-rl.question('Enter the number of lines to print: ', (totalLines) => {
-  totalLines = parseInt(totalLines);
+rl.question('Enter the number of lines to print: ', (tl) => {
+  tl = parseInt(tl);
 
-  if (isNaN(totalLines) || totalLines <= 0) {
+  if (isNaN(tl) || tl <= 0) {
     console.error('Invalid');
     rl.close();
     process.exit(1);
   }
 
-  const readStream = fs.createReadStream(filename);
+  const readStream = fs.createReadStream(file);
   const unZip = readStream.pipe(zlib.createGunzip());
   const rl = readline.createInterface({
     input: unZip,
@@ -36,7 +36,7 @@ rl.question('Enter the number of lines to print: ', (totalLines) => {
 
     lines++;
 
-    if (lines >= totalLines) {
+    if (lines >= tl) {
       rl.close();
       readStream.close();
     }
