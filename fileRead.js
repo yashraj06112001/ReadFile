@@ -3,11 +3,13 @@ const zlib = require('zlib');
 const readline = require('readline');
 
 const filename = process.argv[2];
-
-
+if (!fs.existsSync(filename)) {
+    console.error(` '${filename}' does not exist.`);
+    process.exit(1);
+  }
 
 const rl = readline.createInterface({
-  input: process.stdin,
+  input: process.stdin
 
 });
 
