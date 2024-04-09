@@ -1,29 +1,50 @@
 const fs = require('fs');
 const zlib = require('zlib');
 const readline = require('readline');
-const filepath = 'file.gz';
-const totalLines = 1000;
-const readStream = fs.createReadStream(filepath);
-const unZip = readStream.pipe(zlib.createGunzip());
+
+const filename = process.argv[2];
+
+if (!filename) {
+  console.error('Usage: node fileread.js <filename>');
+  process.exit(1);
+}
+
 const rl = readline.createInterface({
-  input: unZip,
-  crlfDelay: Infinity 
+  input: process.stdin,
+
 });
 
-let lines = 0;
+rl.question('Enter the number of lines to print: ', (totalLines) => {
+  totalLines = parseInt(totalLines);
 
-rl.on('line', (line) => {
-  // Print the line
-  console.log(line);
-
-  lines++;
-
-  if (lines >= totalLines) {
+  if (isNaN(totalLines) || totalLines <= 0) {
+    console.error('Invalid');
     rl.close();
-    readStream.close(); 
+    process.exit(1);
   }
-});
 
-rl.on('close', () => {
-  console.log('Finished reading the file.');
+  const readStream = fs.createReadStream(filename);
+  const unZip = readStream.pipe(zlib.createGunzip());
+  const rl = readline.createInterface({
+    input: unZip,
+    crlfDelay: Infinity
+  });
+
+  let lines = 0;
+
+  rl.on('line', (line) => {
+    console.log(line);
+
+    lines++;
+
+    if (lines >= totalLines) {
+      rl.close();
+      readStream.close();
+    }
+  });
+
+  rl.on('close', () => {
+    console.log('Finished reading the file.');
+    rl.close();
+  });
 });
